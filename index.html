@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUE: Learning Shared Representations from Unpaired Data</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .venue {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .authors {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .affiliations {
+            font-size: 0.95em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .equal-contribution {
+            font-size: 0.9em;
+            font-style: italic;
+            opacity: 0.85;
+            margin-bottom: 30px;
+        }
+
+        /* Links */
+        .links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .link-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .link-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Content */
+        main {
+            background: white;
+            margin: -30px auto 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        section {
+            padding: 60px 80px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        h2 {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #667eea;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 1.5em;
+            margin: 30px 0 15px;
+            color: #495057;
+        }
+
+        /* Abstract */
+        .abstract {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .abstract p {
+            font-size: 1.1em;
+            text-align: justify;
+            line-height: 1.8;
+        }
+        @media (max-width: 768px) {
+            .abstract p {
+            text-align: initial;
+            }
+        }
+
+        /* Figure */
+        .figure {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .figure-caption {
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        /* Method Overview */
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .method-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .method-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        /* Results Grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .result-card .metric {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .result-card .label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        /* Citation Box */
+        .citation-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            section {
+                padding: 40px 30px;
+            }
+
+            .links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .method-grid, .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .placeholder-image {
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+            border: 2px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            border-radius: 10px;
+            color: #666;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Learning Shared Representations from Unpaired Data</h1>
+            <div class="venue">NeurIPS 2025</div>
+            <div class="authors">
+                <strong>Amitai Yacobi</strong><sup>*</sup>, 
+                <strong>Nir Ben-Ari</strong><sup>*</sup>, 
+                <strong>Ronen Talmon</strong>, 
+                <strong>Uri Shaham</strong>
+            </div>
+            <div class="affiliations">
+                Bar-Ilan University | Technion | Moodify.ai
+            </div>
+            <div class="equal-contribution">
+                * Equal contribution, random order
+            </div>
+            <div class="links">
+                <a href="https://arxiv.org/abs/2505.21524" class="link-button">
+                    <i class="fas fa-file-pdf"></i> Arxiv
+                </a>
+                <a href="https://github.com/shaham-lab/SUE" class="link-button">
+                    <i class="fab fa-github"></i> Code
+                </a>
+                <a href="#" class="link-button" id="copy-bibtex-btn">
+                    <i class="fas fa-quote-left"></i> BibTeX
+                </a>
+                <span id="bibtex-notification" style="display:none; margin-left:10px; color:#fff; background:#667eea; border-radius:20px; padding:6px 18px; font-size:0.95em;">Copied!</span>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const btn = document.getElementById('copy-bibtex-btn');
+                        const notif = document.getElementById('bibtex-notification');
+                        btn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const bibtex = `@inproceedings{yacobi2025sue,
+                                                title={Learning Shared Representations from Unpaired Data},
+                                                author={Yacobi, Amitai and Ben-Ari, Nir and Talmon, Ronen and Shaham, Uri},
+                                                journal={Advances in Neural Information Processing Systems},
+                                                year={2025}
+                                            }`;
+                            navigator.clipboard.writeText(bibtex).then(function() {
+                                notif.style.display = 'inline-block';
+                                setTimeout(function() {
+                                    notif.style.display = 'none';
+                                }, 1500);
+                            });
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Abstract -->
+        <section class="abstract">
+            <h2>Abstract</h2>
+            <p>
+                Learning shared representations is a primary area of multimodal representation learning. Current approaches rely heavily on paired samples from each modality, which are significantly harder to obtain than unpaired ones. In this work, we demonstrate that shared representations can be learned <strong>almost exclusively from unpaired data</strong>. Our arguments are grounded in the spectral embeddings of random walk matrices constructed independently from each unimodal representation. Empirical results in computer vision and natural language processing domains support its potential, revealing the effectiveness of unpaired data in capturing meaningful cross-modal relations, demonstrating high capabilities in retrieval tasks, generation, arithmetics, zero-shot, and cross-domain classification. This work is the first to demonstrate these capabilities almost exclusively from unpaired samples, giving rise to a cross-modal embedding that could be viewed as <strong>universal</strong>, i.e., independent of the specific modalities of the data.
+            </p>
+        </section>
+
+        <!-- Results -->
+        <section>
+            <h2>Outstanding Performance with Minimal Pairs</h2>
+            
+            <div class="figure">
+                <img src="images/coco_fig_100.png" alt="Figure 2: Retrieval Examples with 100 Pairs" style="max-width: 60%; height: auto;" class="responsive-figure-img">
+                <script>
+                    // Responsive image width for phones
+                    document.addEventListener('DOMContentLoaded', function() {
+                        function adjustFigureImg() {
+                            var imgs = document.querySelectorAll('.responsive-figure-img');
+                            imgs.forEach(function(img) {
+                                if (window.innerWidth <= 768) {
+                                    img.style.maxWidth = '100%';
+                                } else {
+                                    img.style.maxWidth = '60%';
+                                }
+                            });
+                        }
+                        adjustFigureImg();
+                        window.addEventListener('resize', adjustFigureImg);
+                    });
+                </script>
+                <p class="figure-caption">
+                    Retrieved images by SUE for custom captions on MSCOCO, trained with only 100 pairs and 10k unpaired samples. Despite minimal paired data, results semantically align closely with text queries.
+                </p>
+            </div>
+
+            <h3>Retrieval Performance</h3>
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="metric">+257%</div>
+                    <div class="label">Improvement over Contrastive on MSCOCO</div>
+                </div>
+                <div class="result-card">
+                    <div class="metric">100</div>
+                    <div class="label">Paired samples needed (vs. 400M for CLIP)</div>
+                </div>
+                <div class="result-card">
+                    <div class="metric">10×</div>
+                    <div class="label">Fewer pairs than contrastive for same results</div>
+                </div>
+            </div>
+
+            <p style="margin-top: 30px; font-size: 1.05em;">
+                SUE achieves remarkable retrieval performance across multiple datasets (MSCOCO, Flickr30k, Polyvore, Edges2Shoes) using only 50-500 paired samples, outperforming contrastive learning by an average of 257% when both use the same minimal number of pairs.
+            </p>
+        </section>
+
+        <!-- Method -->
+        <section>
+            <h2>SUE: Spectral Universal Embedding</h2>
+            <div class="figure">
+                <img src="images/method_fig2.png" alt="Figure 3: SUE Pipeline Overview">
+                <p class="figure-caption">
+                    SUE's three-step pipeline: (1) Spectral Embedding extracts universal features from each modality independently, (2) CCA provides linear alignment using minimal paired samples, (3) MMD-net performs non-linear fine-tuning.
+                </p>
+            </div>
+            
+            <div class="method-grid">
+                <div class="method-card">
+                    <h4><i class="fas fa-project-diagram"></i> Step 1: Spectral Embedding</h4>
+                    <p>Learn parametric spectral embeddings independently for each modality using SpectralNet. These capture the global structure and universal properties of the data manifolds.</p>
+                </div>
+                <div class="method-card">
+                    <h4><i class="fas fa-link"></i> Step 2: CCA Alignment</h4>
+                    <p>Use Canonical Correlation Analysis on a minimal number of paired samples (as few as 50-500) to resolve rotational ambiguity and provide initial linear alignment.</p>
+                </div>
+                <div class="method-card">
+                    <h4><i class="fas fa-adjust"></i> Step 3: MMD Fine-tuning</h4>
+                    <p>Train a residual network to minimize Maximum Mean Discrepancy between modalities, leveraging the full unpaired dataset for non-linear refinement.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Insight -->
+        <section>
+            <h2>Key Insight: Universal Embeddings</h2>
+            <div class="figure">
+                <img src="images/universality_fig3.png" alt="Figure 1: Empirical demonstration of universality">
+                <p class="figure-caption">
+                    (a) Distances between corresponding random walks on image and text graphs show significantly greater similarity than non-matching walks. (b) Paired points are consistently closer in aligned spectral embeddings, indicating independently learned embeddings capture analogous structure across modalities.
+                </p>
+            </div>
+            <p style="margin-top: 30px; font-size: 1.05em; line-height: 1.8;">
+                We demonstrate that random walks defined on different modality-specific representations exhibit remarkable similarity when those representations capture semantics well. This similarity enables us to learn <strong>universal embeddings</strong> - representation spaces where corresponding instances from different modalities naturally align, even when trained almost exclusively on unpaired data.
+            </p>
+        </section>
+
+        <!-- Applications -->
+        <section>
+            <h2>Diverse Applications</h2>
+            
+            <div class="figure">
+                <img src="images/qualitative_fig.png" alt="Figure 4: Application Examples">
+                <p class="figure-caption">
+                    (a) Cross-modal retrieval captures semantic relationships. (b) Text-to-image generation with minimal text supervision. (c) Semantic arithmetic operations in the universal space.
+                </p>
+            </div>
+
+            <div class="method-grid">
+                <div class="method-card">
+                    <h4><i class="fas fa-search"></i> Cross-Modal Retrieval</h4>
+                    <p>Superior retrieval performance across vision-language, vision-vision, and tabular datasets with minimal paired supervision.</p>
+                </div>
+                <div class="method-card">
+                    <h4><i class="fas fa-image"></i> Text-to-Image Generation</h4>
+                    <p>Generate images from text queries using a GAN trained only on images, enabled by universal embeddings.</p>
+                </div>
+                <div class="method-card">
+                    <h4><i class="fas fa-plus"></i> Semantic Arithmetic</h4>
+                    <p>Intuitive vector operations like "man" + "with sunglasses" produce semantically meaningful results.</p>
+                </div>
+                <div class="method-card">
+                    <h4><i class="fas fa-tag"></i> Zero-Shot Classification</h4>
+                    <p>88% accuracy on few ImageNet classes when trained on Flickr30k with just 500 pairs.</p>
+                </div>
+                <div class="method-card">
+                    <h4><i class="fas fa-exchange-alt"></i> Cross-Domain Transfer</h4>
+                    <p>Effective knowledge transfer between domains with minimal correspondence (e.g., Office31 dataset).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Results Figure -->
+        <section>
+            <h2>Unpaired Data is Key</h2>
+            <div class="figure">
+                <img src="images/paired_unpaired_effect_fig3.png" alt="Figure 5: Effect of Paired vs Unpaired Data">
+                <p class="figure-caption">
+                    (a) SUE with 100 pairs requires an order of magnitude more pairs in contrastive learning to achieve similar results. (b) SUE improves significantly with additional unpaired data. (c) SUE relies minimally on paired data beyond a small threshold.
+                </p>
+            </div>
+            <p style="margin-top: 30px; font-size: 1.05em; line-height: 1.8;">
+                Our experiments reveal that SUE derives its strength primarily from unpaired samples. Adding more unpaired data consistently improves performance, while adding more paired samples beyond a small threshold (∼500) provides diminishing returns. This demonstrates the untapped potential of unpaired data in multimodal learning.
+            </p>
+        </section>
+
+        <!-- Citation -->
+        <section>
+            <h2>Citation</h2>
+            <div class="citation-box">
+@inproceedings{yacobi2025sue,<br>
+&nbsp;&nbsp;title={Learning Shared Representations from Unpaired Data},<br>
+&nbsp;&nbsp;author={Yacobi, Amitai and Ben-Ari, Nir and Talmon, Ronen and Shaham, Uri},<br>
+&nbsp;&nbsp;journal={Advances in Neural Information Processing Systems},<br>
+&nbsp;&nbsp;year={2025}<br>
+}
+            </div>
+        </section>
+    </main>
+
+    <footer style="text-align: center; padding: 40px 0; color: #6c757d;">
+        <div class="container">
+            <p>© 2025</p>
+        </div>
+    </footer>
+</body>
+</html>
