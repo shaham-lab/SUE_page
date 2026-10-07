@@ -304,12 +304,14 @@
                         const notif = document.getElementById('bibtex-notification');
                         btn.addEventListener('click', function(e) {
                             e.preventDefault();
-                            const bibtex = `@inproceedings{yacobi2025sue,
-                                                title={Learning Shared Representations from Unpaired Data},
-                                                author={Yacobi, Amitai and Ben-Ari, Nir and Talmon, Ronen and Shaham, Uri},
-                                                journal={Advances in Neural Information Processing Systems},
-                                                year={2025}
-                                            }`;
+                            const bibtex = `@article{yacobi2026learning,
+  title={Learning shared representations from unpaired data},
+  author={Yacobi, Amitai and Ben-Ari, Nir and Talmon, Ronen and Shaham, Uri},
+  journal={Advances in Neural Information Processing Systems},
+  volume={38},
+  pages={46634--46666},
+  year={2026}
+}`;
                             navigator.clipboard.writeText(bibtex).then(function() {
                                 notif.style.display = 'inline-block';
                                 setTimeout(function() {
@@ -467,11 +469,13 @@
         <section>
             <h2>Citation</h2>
             <div class="citation-box">
-@inproceedings{yacobi2025sue,<br>
-&nbsp;&nbsp;title={Learning Shared Representations from Unpaired Data},<br>
+@article{yacobi2026learning,<br>
+&nbsp;&nbsp;title={Learning shared representations from unpaired data},<br>
 &nbsp;&nbsp;author={Yacobi, Amitai and Ben-Ari, Nir and Talmon, Ronen and Shaham, Uri},<br>
-&nbsp;&nbsp;journal={The Thirty-ninth Annual Conference on Neural Information Processing Systems},<br>
-&nbsp;&nbsp;year={2025}<br>
+&nbsp;&nbsp;journal={Advances in Neural Information Processing Systems},<br>
+&nbsp;&nbsp;volume={38},<br>
+&nbsp;&nbsp;pages={46634--46666},<br>
+&nbsp;&nbsp;year={2026}<br>
 }
             </div>
         </section>
